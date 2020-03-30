@@ -6,7 +6,7 @@
 # |Creator: Nemanja Tomic                          |
 # |------------------------------------------------|
 
-import cPickle as pickle
+import pickle
 from collections import Counter
 
 def read_sentences(file_path):
@@ -23,8 +23,8 @@ def create_dataset(en_sentences, de_sentences):
 	en_vocab_dict = Counter(word.strip(',." ;:)(][?!') for sentence in en_sentences for word in sentence.split())
 	de_vocab_dict = Counter(word.strip(',." ;:)(][?!') for sentence in de_sentences for word in sentence.split())
 
-	en_vocab = map(lambda x: x[0], sorted(en_vocab_dict.items(), key = lambda x: -x[1]))
-	de_vocab = map(lambda x: x[0], sorted(de_vocab_dict.items(), key = lambda x: -x[1]))
+	en_vocab = list(map(lambda x: x[0], sorted(en_vocab_dict.items(), key = lambda x: -x[1])))
+	de_vocab = list(map(lambda x: x[0], sorted(de_vocab_dict.items(), key = lambda x: -x[1])))
 
 	en_vocab = en_vocab[:20000]
 	de_vocab = de_vocab[:30000]
@@ -34,7 +34,7 @@ def create_dataset(en_sentences, de_sentences):
 	en_word2idx['<ukn>'] = 0
 	en_word2idx['<pad>'] = 1
 
-	en_idx2word = dict([(idx, word) for word, idx in en_word2idx.iteritems()])
+	en_idx2word = dict([(idx, word) for word, idx in en_word2idx.items()])
 
 
 	start_idx = 4
@@ -44,7 +44,7 @@ def create_dataset(en_sentences, de_sentences):
 	de_word2idx['<eos>'] = 2
 	de_word2idx['<pad>'] = 3
 
-	de_idx2word = dict([(idx, word) for word, idx in de_word2idx.iteritems()])
+	de_idx2word = dict([(idx, word) for word, idx in de_word2idx.items()])
 
 	x = [[en_word2idx.get(word.strip(',." ;:)(][?!'), 0) for word in sentence.split()] for sentence in en_sentences]
 	y = [[de_word2idx.get(word.strip(',." ;:)(][?!'), 0) for word in sentence.split()] for sentence in de_sentences]
@@ -72,7 +72,7 @@ def read_dataset(file_path):
 
 def main():
 	en_sentences = read_sentences('data/data.en')
-	de_sentences = read_sentences('data/data.de')
+	de_sentences = read_sentences('data/data.hi')
 
 	save_dataset('./data.pkl', create_dataset(en_sentences, de_sentences))
 
